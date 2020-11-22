@@ -1,13 +1,60 @@
 fun main(args : Array<String>) {
-    val b = Board()
-    val x = b.getBoard()
+    val board = Board()
+    var gameStatus = board.getGameStatus()
 
+    //счетчик ходов
+    var counter = 0
+
+    fun whoWasWin(): Pair<String, Pair<Int, Int>> {
+        val currentBoard = board.getBoard()
+        var whites = 0
+        var blacks = 0
+
+        for (i in 0 until 8) {
+            for(j in 0 until 8) {
+                val element = currentBoard[i][j]
+
+                if (element == Board.CellStatus.White) {
+                    whites++
+                }
+                else {
+                    if (element == Board.CellStatus.Black)
+                        blacks++
+                }
+            }
+        }
+
+        return if (whites > blacks) {
+            Pair("белыми", Pair(whites, blacks))
+        } else Pair("черными", Pair(whites, blacks))
+    }
 
     //Функция, которая рисует текущую доску + состояние игры
     fun showBoard() {
-        println()
-        val gameStatus = b.getGameStatus()
-        println(" ".repeat(3) + "Текущий статус игры: " + gameStatus)
+        val currentBoard = board.getBoard()
+
+        //Если игра еще не закончилась
+        if (gameStatus != GameStatus.GameOver) {
+            println()
+
+            val status = if (gameStatus == GameStatus.WhiteTurn )
+                "Ход белых"
+            else "Ход черных"
+
+            println(" ".repeat(3) + "\u001B[35mТекущий статус игры: $status\u001B[0m")
+        } else {
+
+            val whoWin = whoWasWin()
+            val whichTeamWin = whoWin.first
+            val points = Pair(whoWin.second.first,whoWin.second.second)
+
+            println()
+            println("\u001B[31mИгра закончена, победил игрок с $whichTeamWin фишками\u001B[0m")
+            println()
+            print("Белых фишек: ${points.first}  Черных фишек: ${points.second}")
+            println()
+        }
+
         println()
 
         //Выводим буквы на доску
@@ -26,7 +73,7 @@ fun main(args : Array<String>) {
             print("$number ")
 
             for (j in 0 until 8) {
-                when(x[i][j]) {
+                when(currentBoard[i][j]) {
                     Board.CellStatus.White ->  print("\u001B[34m Б \u001B[0m")
                     Board.CellStatus.Black -> print("\u001B[33m Ч \u001B[0m")
                     else -> print(" - ")
@@ -37,16 +84,47 @@ fun main(args : Array<String>) {
         println()
     }
 
+    //Здесь выбираем тех, кто будет играть
+    fun getPlayer(isWhite: Boolean) : Player {
+        if (isWhite) {
+            return PrimitiveBot()
+        }
+        return PrimitiveBot()
+    }
+
+    // Первоначальной расположение фигур
+    println()
+    println(" ".repeat(7) + "\u001B[31m!!!Игра началась!!!\u001B[0m")
     showBoard()
 
+    val whitePlayer = getPlayer(true)
+    val blackPlayer = getPlayer( false)
+    while(gameStatus != GameStatus.GameOver) {
 
-    val list = b.getValidMoves()
-    println()
-    list.forEach {
-        println("Клетка с координатами: " + it.h + " " + it.v)
+        println()
+        print("Выберите клетку куда будете ходить: ")
+
+        val player = if (gameStatus == GameStatus.WhiteTurn)
+            whitePlayer
+        else blackPlayer
+
+        val currentCell = player.selectMove(board)
+
+        val currentMove = board.canMove(currentCell)
+
+        //Вбита клетка, куда нельзя походить , но валидные ходы присутствуют
+        if (!currentMove) {
+
+            println("Вы не можете походить в клетку \u001B[32m${currentCell}\u001B[0m, выберите другую")
+            continue
+        }
+
+        println("Выбран ход $currentCell")
+        gameStatus = board.getGameStatus()
+        showBoard()
+        counter++
     }
 
     println()
-    println(b.getGameStatus())
-
+    println("В партии было сделано $counter ходов")
 }

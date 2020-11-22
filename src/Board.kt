@@ -10,14 +10,6 @@ class Board {
         reset()
     }
 
-    enum class  GameStatus {
-        WhiteTurn,
-        BlackTurn,
-        WhiteWin,
-        BlackWin,
-        Draw
-    }
-
     enum class CellStatus {
         White,
         Black,
@@ -70,6 +62,12 @@ class Board {
         return status
     }
 
+    private fun updateGameStatus(){
+        status = if (isWhiteTurn())
+            GameStatus.BlackTurn
+        else GameStatus.WhiteTurn
+    }
+
     //Обновление доски для новой партии
      fun reset(){
         board.forEachIndexed{ x, it -> it.forEachIndexed { y, _ ->  board[x][y] = CellStatus.Empty  } }
@@ -81,84 +79,48 @@ class Board {
         return status != GameStatus.BlackTurn
     }
 
-    //Получение клетки слева
-    private fun getLeftSquare(x: Int, y: Int): Square? {
-        if (x - 1 in 0..7) {
-            return Square(Cell(x - 1, y), board[x - 1][y])
-        }
-        return null
-    }
-
-    //Получение клетки справа сверху
-    private fun getRightSquare(x: Int, y: Int): Square? {
-        if (x + 1 in 0..7) {
-            return Square(Cell(x + 1, y), board[x + 1][y])
-        }
-        return null
-    }
-
-    //Получение клетки сверху
-    private fun getUpSquare(x: Int, y: Int): Square? {
-        if (y - 1 in 0..7) {
-            return Square(Cell(x, y - 1), board[x][y - 1])
-        }
-        return null
-    }
-
-    //Получение клетки снизу
-    private fun getDownSquare(x: Int, y: Int): Square? {
-        if (y + 1 in 0..7) {
-            return Square(Cell(x, y + 1), board[x][y + 1])
-        }
-        return null
-    }
-
-    //Получение клетки сверху слева
-    private fun getUpLeftSquare(x: Int, y: Int): Square? {
-        if (x - 1 in 0..7 && y - 1 in 0..7) {
-            return Square(Cell(x - 1, y - 1), board[x - 1][y - 1])
-        }
-        return null
-    }
-
-    //Получение клетки сверху справа
-    private fun getUpRightSquare(x: Int, y: Int): Square? {
-        if (x + 1 in 0..7 && y - 1 in 0..7) {
-            return Square(Cell(x + 1, y - 1), board[x + 1][y - 1])
-        }
-        return null
-    }
-
-    //Получение снизу слева
-    private fun getDownLeftSquare(x: Int, y: Int): Square? {
-        if (x - 1 in 0..7 && y + 1 in 0..7) {
-            return Square(Cell(x - 1, y + 1), board[x - 1][y + 1])
-        }
-        return null
-    }
-
     //Получение списка непустых клеток вокруг данной
-    private fun listOfAnyNonEmptyCellAround(x: Int, y: Int): List<Square> {
+    private fun getListOfAnyNonEmptyCellAround(x: Int, y: Int): List<Square> {
 
-        //Получение клетки снизу справа
-        fun getDownRightSquare(x: Int, y: Int): Square? {
-            if (x + 1 in 0..7 && y + 1 in 0..7) {
-                return Square(Cell(x + 1, y + 1), board[x + 1][y + 1])
+        //Получение соседней клетки в определенном направлении
+        fun getNeighboringSquare(startX: Int, startY: Int, newX: Int, newY: Int): Square? {
+
+            val nextX = startX + newX
+            val nextY = startY + newY
+
+            if(nextX in 0..7 && nextY in 0..7) {
+                return Square(Cell(nextX,nextY), board[nextX][nextY])
             }
+
             return null
         }
 
-
         val result = mutableListOf<Square>()
 
-        getLeftSquare(x, y)?.let { result.add(it) }
-        getUpLeftSquare(x, y)?.let { result.add(it) }
-        getUpSquare(x, y)?.let { result.add(it) }
-        getUpRightSquare(x, y)?.let { result.add(it) }
-        getRightSquare(x, y)?.let { result.add(it) }
-        getDownRightSquare(x, y)?.let { result.add(it) }
-        getDownSquare(x, y)?.let { result.add(it) }
-        getDownLeftSquare(x, y)?.let { result.add(it) }
+        //Получение клетки слева
+        getNeighboringSquare(x, y, -1, 0)?.let { result.add(it) }
+
+        //Получение клетки справа
+        getNeighboringSquare(x, y, 1, 0)?.let { result.add(it) }
+
+        //Получение клетки сверху
+        getNeighboringSquare(x, y, 0, -1)?.let { result.add(it) }
+
+        //Получение клетки снизу
+        getNeighboringSquare(x, y, 0, 1)?.let { result.add(it) }
+
+        //Получение клетки сверху слева
+        getNeighboringSquare(x, y, -1, -1)?.let { result.add(it) }
+
+
+        //Получение клетки сверху справа
+        getNeighboringSquare(x, y, 1, -1)?.let { result.add(it) }
+
+        //Получение клетки снизу справа
+        getNeighboringSquare(x, y, 1, 1)?.let { result.add(it) }
+
+        //Получение снизу слева
+        getNeighboringSquare(x, y, -1, 1)?.let { result.add(it) }
 
         return result.filter { it.cellStatus != CellStatus.Empty }
     }
@@ -236,18 +198,29 @@ class Board {
     //Нахождение последней клетки с определенным статусом в заданном ряду
     private fun getLastSquare(startX: Int, startY: Int, secondX: Int, secondY: Int, currentStatus: CellStatus, stopPos: Cell ): Square? {
 
-        val route = getRoute(startX,startY,secondX,secondY,stopPos)
-
-        var result: Square? = null
+        var route = getRoute(startX,startY,secondX,secondY,stopPos)
+        var currentCell = route.first()
 
         //Поиск последней фишки с заданном ряду с таким же цветом
-        val x = 0 // чекнуть правила, мб тут надо до первой бежать
-        route.forEach {
-            if (it.cellStatus == currentStatus)
-                result = it
+        //По правилам игры Реверси клетка должна быть первой после непрерывного ряда фишек соперника
+
+        //Если следующая фишка нашего цвета -> такой ход не валидный
+        if (currentCell.cellStatus == currentStatus)
+            return null
+
+
+        //теперь найдем первую фишку нашего цвета, после неперывного ряда фишек соперника
+        while (currentCell.cellStatus != currentStatus) {
+            route = route.drop(1)
+
+            //Если мы пробежались по списку и после нашей фишки все остальные-это фишки соперника -> такой ход не валидный
+            if (route.isEmpty())
+                return null
+
+            currentCell = route.first()
         }
 
-        return result
+        return currentCell
     }
 
     //Получение списка клеток от start до end
@@ -283,7 +256,7 @@ class Board {
 
 
                 //Получаем лист, соджержащий непустые клетки вокруг данной -> пропускаем
-                val list = listOfAnyNonEmptyCellAround(i , j)
+                val list = getListOfAnyNonEmptyCellAround(i , j)
 
 
                 //Если все клетки вокруг данной пусты -> пропускаем
@@ -297,22 +270,13 @@ class Board {
                         CellStatus.White
                     else CellStatus.Black
 
-                    //Получение последней фишки в заданном ряду с таким же цветом, чей сейчас ход
+                    //Получение последней фишки в заданном ряду с таким же цветом, чей сейчас ход (после ряда фишек соперника)
                     val lastSquare = getLastSquare(i, j, it.cell.h, it.cell.v, currentStatus, Cell(9, 9))
 
                     val currentCell = Cells.fromCell(i, j)
-                    //Если такая фишка присутствует и она еще не в result
+                    //Если такая фишка присутствует и она еще не в result -> такой ход валидный
                     if (lastSquare != null && currentCell !in result) {
-
-                        //Получаем путь и делаем фильтрацию по фишкам противоположного цвета, так как по правилам Реверси
-                        //валидным считается тот ход, при котором переворачиваются фишки соперника
-                        val route = getRoute(i, j, lastSquare.cell.h, lastSquare.cell.v, Cell(lastSquare.cell.h, lastSquare.cell.v)).
-                            filter { k -> k.cellStatus != currentStatus }
-
-
-                        //Если в пути встречается хотя бы одна фишка соперника -> ход валидный (добавляем его в result)
-                        if (route.isNotEmpty())
-                            result.add(currentCell)
+                        result.add(currentCell)
                     }
 
                 }
@@ -322,20 +286,75 @@ class Board {
         return result
     }
 
+    //Является ли ход в данную клетку валидным
     fun isValidMove(cell: Cells): Boolean {
         val listOfValidMoves = getValidMoves()
         return cell in listOfValidMoves
     }
 
+    fun canMove(cell : Cells): Boolean{
+
+        //Нельзя сделать ход в эту клетку
+        if (!isValidMove(cell)) {
+            return false
+        }
+
+        //ход сделать можно -> переворачиваем фишки соперника
+        move(cell)
+
+        //передаем очередность хода
+        updateGameStatus()
+
+        //Если у следующего игрока нет владиных ходов -> ходим опять мы или же игра окончена
+        if (getValidMoves().isEmpty()) {
+
+            //Если у нас теперь тоже нет валидных ходов -> игра закончена
+            updateGameStatus()
+
+            if (getValidMoves().isEmpty()) {
+                status = GameStatus.GameOver
+            }
+
+        }
+
+        return true
+    }
+
+    //При вызове данной функции ход в клетку всегда будет возможен -> надо перевернуть фишки соперника
+    private fun move(cell: Cells) {
+
+        //Получим статус, кто сейчас ходит
+        val currentStatus = if(isWhiteTurn())
+            CellStatus.White
+        else CellStatus.Black
+
+        //Получим список клеток, в направлении которых могут перевернуться фишки соперника
+        val listOfSquaresAround = getListOfAnyNonEmptyCellAround(cell.h, cell.v).
+            filter { it.cellStatus !=  currentStatus }
+
+        //Заменяем фишки соперника на свои, если это возможно
+        listOfSquaresAround.forEach { it ->
+
+            //Ищем первую фишку своего цвета после ряда фишек соперника
+            val lastSquare = getLastSquare(cell.h, cell.v, it.cell.h, it.cell.v, currentStatus, Cell(9, 9))
+
+            //Если такая фишка есть -> переворачиваем фишки соперника
+            if (lastSquare != null) {
+
+                //Получаем список фишек, которые надо перевенуть
+                val route = getRoute(cell.h, cell.v, lastSquare.cell.h, lastSquare.cell.v, Cell(lastSquare.cell.h, lastSquare.cell.v))
+
+                //Переворачиваем фишки
+                route.forEach {  k -> board[k.cell.h][k.cell.v] = currentStatus }
+                board[cell.h][cell.v] = currentStatus
+
+            }
+
+        }
+
+    }
+
     fun makeCopyAndMove(){
-
-    }
-
-    fun move (){
-
-    }
-
-    fun canMove(){
 
     }
 

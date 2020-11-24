@@ -24,9 +24,11 @@ fun main(args : Array<String>) {
             }
         }
 
-        return if (whites > blacks) {
-            Pair("белыми", Pair(whites, blacks))
-        } else Pair("черными", Pair(whites, blacks))
+        return when{
+            whites > blacks -> Pair("Белыми", Pair(whites, blacks))
+            blacks > whites -> Pair("Черными", Pair(whites, blacks))
+            else -> Pair("Ничья", Pair(whites, blacks))
+        }
     }
 
     //Функция, которая рисует текущую доску + состояние игры
@@ -49,7 +51,12 @@ fun main(args : Array<String>) {
             val points = Pair(whoWin.second.first,whoWin.second.second)
 
             println()
-            println("\u001B[31mИгра закончена, победил игрок с $whichTeamWin фишками\u001B[0m")
+            println(" ".repeat(4) + "\u001B[31m!!!Игра закончилась!!!\u001B[0m")
+            if (whichTeamWin.isNotEmpty()) {
+                println("\u001B[31mПобедил игрок с $whichTeamWin фишками\u001B[0m")
+            } else {
+                println(" ".repeat(8) + "\u001B[31mУстановилась $whichTeamWin\u001B[0m")
+            }
             println()
             print("Белых фишек: ${points.first}  Черных фишек: ${points.second}")
             println()
@@ -87,7 +94,7 @@ fun main(args : Array<String>) {
     //Здесь выбираем тех, кто будет играть
     fun getPlayer(isWhite: Boolean) : Player {
         if (isWhite) {
-            return PrimitiveBot()
+            return AdvancedBot()
         }
         return PrimitiveBot()
     }

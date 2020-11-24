@@ -1,10 +1,14 @@
 import java.lang.IllegalStateException
 import java.util.concurrent.ThreadLocalRandom
 
-class PrimitiveBot : Player
-{
+/**
+ * Данный бот максимально примитивный, он просто выбирает рандомную клетку для хода из списка возможных ходов
+ */
+
+class PrimitiveBot : Player {
+
     override fun selectMove(board: Board): Cells {
-        val validMoves = board.getValidMoves()
+        val validMoves = board.getValidMoves(board.isWhiteTurn())
 
         if (validMoves.isEmpty())
             throw IllegalStateException("Невозможная ситуация")

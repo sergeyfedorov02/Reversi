@@ -24,6 +24,6 @@ enum class Cells(val h: Int, val v: Int) {
     H5(4,7), H6(5,7), H7(6,7), H8(7,7);
 
     companion object {
-        fun fromCell(h: Int, v:Int) = Cells.values().first { it.h == h && it.v == v }
+        fun fromCell(h: Int, v:Int) = values().first { it.h == h && it.v == v }
     }
 }

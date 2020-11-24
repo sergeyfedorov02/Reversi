@@ -18,7 +18,7 @@ class Board {
 
     //Функция для тестов, чтобы сразу выставить определенную ситуацию на доске
     internal fun setPosition(whites: Set<Cells>, blacks: Set<Cells>, isWhiteTurn: Boolean) {
-        reset()
+        clear()
 
         status = if (isWhiteTurn)
             GameStatus.WhiteTurn
@@ -54,6 +54,15 @@ class Board {
         return result
     }
 
+    //Получение всех клеток, на которых нет фишек (пустые клетки)
+    fun getEmptyCells(): Set<Cells> {
+        val result = mutableSetOf<Cells>()
+        board.forEachIndexed { x,it -> it.forEachIndexed { y,k -> if (k == CellStatus.Empty) {
+            result.add(Cells.fromCell(x,y))} } }
+
+        return result
+    }
+
     fun getBoard(): Array<Array<CellStatus>> {
         return board
     }
@@ -68,14 +77,17 @@ class Board {
         else GameStatus.WhiteTurn
     }
 
+    private fun clear() {
+        board.forEachIndexed{ x, it -> it.forEachIndexed { y, _ ->  board[x][y] = CellStatus.Empty  } }
+    }
     //Обновление доски для новой партии
      fun reset(){
-        board.forEachIndexed{ x, it -> it.forEachIndexed { y, _ ->  board[x][y] = CellStatus.Empty  } }
+        clear()
         status = GameStatus.BlackTurn
         setStartPosition()
     }
 
-    private fun isWhiteTurn() : Boolean{
+    fun isWhiteTurn() : Boolean{
         return status != GameStatus.BlackTurn
     }
 
@@ -238,7 +250,7 @@ class Board {
         }
     }
 
-    fun getValidMoves(): Set<Cells> {
+    fun getValidMoves(isWhiteTurn: Boolean): Set<Cells> {
 
         val result = mutableSetOf<Cells>()
 
@@ -266,7 +278,7 @@ class Board {
                 //Проверяем каждую клетку из списка, на наличие в ее ряду фишки такого же цвета чей сейчас ход
                 list.forEach{
 
-                    val currentStatus = if (isWhiteTurn())
+                    val currentStatus = if (isWhiteTurn)
                         CellStatus.White
                     else CellStatus.Black
 
@@ -288,7 +300,7 @@ class Board {
 
     //Является ли ход в данную клетку валидным
     fun isValidMove(cell: Cells): Boolean {
-        val listOfValidMoves = getValidMoves()
+        val listOfValidMoves = getValidMoves(isWhiteTurn())
         return cell in listOfValidMoves
     }
 
@@ -306,12 +318,12 @@ class Board {
         updateGameStatus()
 
         //Если у следующего игрока нет владиных ходов -> ходим опять мы или же игра окончена
-        if (getValidMoves().isEmpty()) {
+        if (getValidMoves(isWhiteTurn()).isEmpty()) {
 
             //Если у нас теперь тоже нет валидных ходов -> игра закончена
             updateGameStatus()
 
-            if (getValidMoves().isEmpty()) {
+            if (getValidMoves(isWhiteTurn()).isEmpty()) {
                 status = GameStatus.GameOver
             }
 
@@ -354,7 +366,15 @@ class Board {
 
     }
 
-    fun makeCopyAndMove(){
+    //Функция, которая создает копию доски и делает на ней move
+    fun makeCopyAndMove(cell : Cells): Board {
+
+        val newBoard = Board()
+
+        newBoard.setPosition(getWhite(), getBlack(), isWhiteTurn())
+        newBoard.canMove(cell)
+
+        return newBoard
 
     }
 

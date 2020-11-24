@@ -1,3 +1,7 @@
+/**
+ * Данный класс предназначен для реализации игры человека
+ */
+
 class HumanPlayer : Player {
     override fun selectMove(board: Board): Cells {
         var yourCell = readLine()

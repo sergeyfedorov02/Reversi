@@ -17,6 +17,36 @@ internal class BoardTest {
     }
 
     @Test
+    fun makeCopyAndMove() {
+        val board = Board()
+        assertEquals(GameStatus.BlackTurn, board.getGameStatus())
+
+        val newBoard = board.makeCopyAndMove(Cells.F5)
+        assertEquals(GameStatus.WhiteTurn, newBoard.getGameStatus())
+
+        assertEquals(setOf(Cells.D4), newBoard.getWhite())
+        assertEquals(setOf(Cells.D5, Cells.E5, Cells.F5, Cells.E4), newBoard.getBlack())
+    }
+
+    @Test
+    fun sameTurnAfterMove() {
+        val board = Board()
+        board.setPosition(setOf(Cells.G8, Cells.G7), setOf(Cells.F8), false)
+        board.canMove(Cells.H8)
+
+        assertEquals(GameStatus.BlackTurn, board.getGameStatus())
+    }
+
+    @Test
+    fun gameOver() {
+        val board = Board()
+        board.setPosition(setOf(Cells.G8), setOf(Cells.F8), false)
+        board.canMove(Cells.H8)
+
+        assertEquals(GameStatus.GameOver, board.getGameStatus())
+    }
+
+    @Test
     fun isValidMoves() {
         val newBoard = Board()
         assertEquals(GameStatus.BlackTurn, newBoard.getGameStatus())
@@ -50,7 +80,7 @@ internal class BoardTest {
         assertEquals(GameStatus.BlackTurn, newBoard.getGameStatus())
 
         //Валидные ходы для начальной позиции
-        val validMoves = newBoard.getValidMoves()
+        val validMoves = newBoard.getValidMoves(newBoard.isWhiteTurn())
         assertEquals( setOf(Cells.E6, Cells.F5, Cells.C4, Cells.D3), validMoves)
 
         //Если черные из стартовой позиции походили на D3
@@ -58,7 +88,7 @@ internal class BoardTest {
             setOf(Cells.D5, Cells.D4, Cells.D3, Cells.E4),
             true)
 
-        val validMoves2 = newBoard.getValidMoves()
+        val validMoves2 = newBoard.getValidMoves(newBoard.isWhiteTurn())
         assertEquals( setOf(Cells.C3, Cells.C5, Cells.E3), validMoves2)
     }
 

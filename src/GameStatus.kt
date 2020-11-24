@@ -1,5 +1,5 @@
 enum class  GameStatus {
-    WhiteTurn,
-    BlackTurn,
-    GameOver
+    WhiteTurn, //ход белых
+    BlackTurn, //ход черных
+    GameOver //игра закончена
 }

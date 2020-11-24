@@ -32,7 +32,7 @@ internal class BoardTest {
     fun sameTurnAfterMove() {
         val board = Board()
         board.setPosition(setOf(Cells.G8, Cells.G7), setOf(Cells.F8), false)
-        board.canMove(Cells.H8)
+        board.move(Cells.H8)
 
         assertEquals(GameStatus.BlackTurn, board.getGameStatus())
     }
@@ -41,7 +41,7 @@ internal class BoardTest {
     fun gameOver() {
         val board = Board()
         board.setPosition(setOf(Cells.G8), setOf(Cells.F8), false)
-        board.canMove(Cells.H8)
+        board.move(Cells.H8)
 
         assertEquals(GameStatus.GameOver, board.getGameStatus())
     }

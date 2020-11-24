@@ -19,8 +19,12 @@ class AdvancedBot : Player {
         //Лист в котором будут храниться клетки валидных ходов с их оценкой
         val listOfEvaluatePosition = mutableListOf<Pair<Cells, Double>>()
 
+        //Пройдемся по всем валидным ходам и выберем из них лучший (с наивысшей оценкой)
         while (validMoves.isNotEmpty()) {
+
             val cell = validMoves.first()
+
+            //будем использовать класс с оценкой позиций
             val evaluatePos = EvaluatePosition()
 
             listOfEvaluatePosition.add(Pair(cell, evaluatePos.evaluatePosition(board,cell)))

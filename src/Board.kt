@@ -10,10 +10,11 @@ class Board {
         reset()
     }
 
+    //enum класс, в котором хранятся возможные значения для клеток доски
     enum class CellStatus {
-        White,
-        Black,
-        Empty
+        White, //на клетке расположена белая фишка
+        Black, //черная фишка
+        Empty //клетка пуста
     }
 
     //Функция для тестов, чтобы сразу выставить определенную ситуацию на доске
@@ -63,23 +64,23 @@ class Board {
         return result
     }
 
-    fun getBoard(): Array<Array<CellStatus>> {
-        return board
-    }
-
+    //Получение ткущего статуса игры
     fun getGameStatus(): GameStatus {
         return status
     }
 
+    //Обновление текущего статуса игры
     private fun updateGameStatus(){
         status = if (isWhiteTurn())
             GameStatus.BlackTurn
         else GameStatus.WhiteTurn
     }
 
+    //Очистка доски - всем клеткам присваивается значение Empty
     private fun clear() {
         board.forEachIndexed{ x, it -> it.forEachIndexed { y, _ ->  board[x][y] = CellStatus.Empty  } }
     }
+
     //Обновление доски для новой партии
      fun reset(){
         clear()
@@ -87,6 +88,9 @@ class Board {
         setStartPosition()
     }
 
+    //Функция для получения значения, кто сейчас ходит
+    // Если true - ходит игрок с белыми фишками
+    // Иначе - игрок с черными фишками
     fun isWhiteTurn() : Boolean{
         return status != GameStatus.BlackTurn
     }
@@ -250,6 +254,7 @@ class Board {
         }
     }
 
+    //Функция дляполученых все валидных ходов для игрока, чей сейчас ход - isWhiteTurn
     fun getValidMoves(isWhiteTurn: Boolean): Set<Cells> {
 
         val result = mutableSetOf<Cells>()
@@ -304,7 +309,7 @@ class Board {
         return cell in listOfValidMoves
     }
 
-    fun canMove(cell : Cells): Boolean{
+    fun move(cell : Cells): Boolean{
 
         //Нельзя сделать ход в эту клетку
         if (!isValidMove(cell)) {
@@ -312,7 +317,7 @@ class Board {
         }
 
         //ход сделать можно -> переворачиваем фишки соперника
-        move(cell)
+        updateBoard(cell)
 
         //передаем очередность хода
         updateGameStatus()
@@ -333,7 +338,7 @@ class Board {
     }
 
     //При вызове данной функции ход в клетку всегда будет возможен -> надо перевернуть фишки соперника
-    private fun move(cell: Cells) {
+    private fun updateBoard(cell: Cells) {
 
         //Получим статус, кто сейчас ходит
         val currentStatus = if(isWhiteTurn())
@@ -372,7 +377,7 @@ class Board {
         val newBoard = Board()
 
         newBoard.setPosition(getWhite(), getBlack(), isWhiteTurn())
-        newBoard.canMove(cell)
+        newBoard.move(cell)
 
         return newBoard
 

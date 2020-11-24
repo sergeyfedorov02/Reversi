@@ -6,23 +6,9 @@ fun main(args : Array<String>) {
     var counter = 0
 
     fun whoWasWin(): Pair<String, Pair<Int, Int>> {
-        val currentBoard = board.getBoard()
-        var whites = 0
-        var blacks = 0
 
-        for (i in 0 until 8) {
-            for(j in 0 until 8) {
-                val element = currentBoard[i][j]
-
-                if (element == Board.CellStatus.White) {
-                    whites++
-                }
-                else {
-                    if (element == Board.CellStatus.Black)
-                        blacks++
-                }
-            }
-        }
+        val whites = board.getWhite().size
+        val blacks = board.getBlack().size
 
         return when{
             whites > blacks -> Pair("Белыми", Pair(whites, blacks))
@@ -33,7 +19,6 @@ fun main(args : Array<String>) {
 
     //Функция, которая рисует текущую доску + состояние игры
     fun showBoard() {
-        val currentBoard = board.getBoard()
 
         //Если игра еще не закончилась
         if (gameStatus != GameStatus.GameOver) {
@@ -52,11 +37,13 @@ fun main(args : Array<String>) {
 
             println()
             println(" ".repeat(4) + "\u001B[31m!!!Игра закончилась!!!\u001B[0m")
-            if (whichTeamWin.isNotEmpty()) {
+
+            if (whichTeamWin != "Ничья") {
                 println("\u001B[31mПобедил игрок с $whichTeamWin фишками\u001B[0m")
             } else {
                 println(" ".repeat(8) + "\u001B[31mУстановилась $whichTeamWin\u001B[0m")
             }
+
             println()
             print("Белых фишек: ${points.first}  Черных фишек: ${points.second}")
             println()
@@ -64,14 +51,22 @@ fun main(args : Array<String>) {
 
         println()
 
-        //Выводим буквы на доску
-        val listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H")
-        for (i in 0 until 8) {
-            val element = listOfLetters[i]
-            print(" ".repeat(3) + element)
+        //Функция для отображения букв на доске
+        fun printLetters(){
+            val listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H")
+            for (i in 0 until 8) {
+                val element = listOfLetters[i]
+                print(" ".repeat(3) + element)
+            }
         }
 
+        //выводим буквы на доску
+        printLetters()
+
         //Выводим текущее положение фишек на доске
+        val whites = board.getWhite()
+        val blacks = board.getBlack()
+
         for (i in 0 until 8) {
             println()
 
@@ -80,12 +75,11 @@ fun main(args : Array<String>) {
             print("$number ")
 
             for (j in 0 until 8) {
-                when(currentBoard[i][j]) {
-                    Board.CellStatus.White ->  print("\u001B[34m Б \u001B[0m")
-                    Board.CellStatus.Black -> print("\u001B[33m Ч \u001B[0m")
-                    else -> print(" - ")
+                when(Cells.fromCell(i, j)) {
+                    in whites -> print("\u001B[34m Б  \u001B[0m")
+                    in blacks -> print("\u001B[33m Ч  \u001B[0m")
+                    else -> print(" -  ")
                 }
-                print(" ")
             }
         }
         println()
@@ -106,6 +100,8 @@ fun main(args : Array<String>) {
 
     val whitePlayer = getPlayer(true)
     val blackPlayer = getPlayer( false)
+
+    //Реализация самой игры
     while(gameStatus != GameStatus.GameOver) {
 
         println()
@@ -115,9 +111,11 @@ fun main(args : Array<String>) {
             whitePlayer
         else blackPlayer
 
+        //Выбираем клетку для хода
         val currentCell = player.selectMove(board)
 
-        val currentMove = board.canMove(currentCell)
+        //Совершаем ход
+        val currentMove = board.move(currentCell)
 
         //Вбита клетка, куда нельзя походить , но валидные ходы присутствуют
         if (!currentMove) {

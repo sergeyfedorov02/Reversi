@@ -53,6 +53,7 @@ fun main(args : Array<String>) {
 
         //Функция для отображения букв на доске
         fun printLetters(){
+
             val listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H")
             for (i in 0 until 8) {
                 val element = listOfLetters[i]

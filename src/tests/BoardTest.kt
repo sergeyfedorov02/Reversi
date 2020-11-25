@@ -12,8 +12,8 @@ internal class BoardTest {
         val newBoard = Board()
         assertEquals(GameStatus.BlackTurn, newBoard.getGameStatus())
 
-        assertEquals( setOf(Cells.D4, Cells.E5), newBoard.getWhite())
-        assertEquals( setOf(Cells.D5, Cells.E4), newBoard.getBlack())
+        assertEquals(setOf(Cells.D4, Cells.E5), newBoard.getWhite())
+        assertEquals(setOf(Cells.D5, Cells.E4), newBoard.getBlack())
     }
 
     @Test
@@ -58,8 +58,10 @@ internal class BoardTest {
 
         //проверим функцию getLastSquare
         val newBoard2 = Board()
-        newBoard2.setPosition(setOf(Cells.A7, Cells.A8, Cells.H2, Cells.A2, Cells.A3),
-            setOf(Cells.B7, Cells.B8, Cells.H1, Cells.H3,Cells.A1), false)
+        newBoard2.setPosition(
+            setOf(Cells.A7, Cells.A8, Cells.H2, Cells.A2, Cells.A3),
+            setOf(Cells.B7, Cells.B8, Cells.H1, Cells.H3, Cells.A1), false
+        )
 
         //Все следующие фишки - это фишки соперника(нет нашей фишки после ряда фишек соперника)
         assertFalse(newBoard2.isValidMove(Cells.A6))
@@ -81,32 +83,36 @@ internal class BoardTest {
 
         //Валидные ходы для начальной позиции
         val validMoves = newBoard.getValidMoves(newBoard.isWhiteTurn())
-        assertEquals( setOf(Cells.E6, Cells.F5, Cells.C4, Cells.D3), validMoves)
+        assertEquals(setOf(Cells.E6, Cells.F5, Cells.C4, Cells.D3), validMoves)
 
         //Если черные из стартовой позиции походили на D3
-        newBoard.setPosition(setOf(Cells.E5),
+        newBoard.setPosition(
+            setOf(Cells.E5),
             setOf(Cells.D5, Cells.D4, Cells.D3, Cells.E4),
-            true)
+            true
+        )
 
         val validMoves2 = newBoard.getValidMoves(newBoard.isWhiteTurn())
-        assertEquals( setOf(Cells.C3, Cells.C5, Cells.E3), validMoves2)
+        assertEquals(setOf(Cells.C3, Cells.C5, Cells.E3), validMoves2)
     }
 
     @Test
     fun checkSetPosition() {
         val newBoard = Board()
-        newBoard.setPosition(setOf(Cells.E5),
-           setOf(Cells.D5, Cells.D4, Cells.D3, Cells.E4),
-            true)
+        newBoard.setPosition(
+            setOf(Cells.E5),
+            setOf(Cells.D5, Cells.D4, Cells.D3, Cells.E4),
+            true
+        )
 
         assertEquals(GameStatus.WhiteTurn, newBoard.getGameStatus())
 
-        assertEquals( setOf(Cells.E5), newBoard.getWhite())
-        assertEquals( setOf(Cells.D5, Cells.D4, Cells.D3, Cells.E4), newBoard.getBlack())
+        assertEquals(setOf(Cells.E5), newBoard.getWhite())
+        assertEquals(setOf(Cells.D5, Cells.D4, Cells.D3, Cells.E4), newBoard.getBlack())
 
         newBoard.reset()
-        assertEquals( setOf(Cells.D4, Cells.E5), newBoard.getWhite())
-        assertEquals( setOf(Cells.D5, Cells.E4), newBoard.getBlack())
+        assertEquals(setOf(Cells.D4, Cells.E5), newBoard.getWhite())
+        assertEquals(setOf(Cells.D5, Cells.E4), newBoard.getBlack())
 
     }
 }

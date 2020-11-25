@@ -1,10 +1,10 @@
 class Board {
 
-    private val board = Array(8) {Array(8) {CellStatus.Empty} }
+    private val board = Array(8) { Array(8) { CellStatus.Empty } }
     private var status: GameStatus = GameStatus.BlackTurn
 
-    data class Square (val cell: Cell, val cellStatus: CellStatus)
-    data class Cell(val h: Int, val v : Int)
+    data class Square(val cell: Cell, val cellStatus: CellStatus)
+    data class Cell(val h: Int, val v: Int)
 
     init {
         reset()
@@ -25,8 +25,8 @@ class Board {
             GameStatus.WhiteTurn
         else GameStatus.BlackTurn
 
-        blacks.forEach { board[it.h][it.v] = CellStatus.Black}
-        whites.forEach { board[it.h][it.v] = CellStatus.White}
+        blacks.forEach { board[it.h][it.v] = CellStatus.Black }
+        whites.forEach { board[it.h][it.v] = CellStatus.White }
     }
 
     //Утсановка стартовой позиции на доске
@@ -38,19 +38,29 @@ class Board {
     }
 
     //Получение всех клеток, на которых находятся белые фишки
-    fun getWhite() : Set<Cells> {
+    fun getWhite(): Set<Cells> {
         val result = mutableSetOf<Cells>()
-        board.forEachIndexed { x,it -> it.forEachIndexed { y,k -> if (k == CellStatus.White) {
-            result.add(Cells.fromCell(x,y))} } }
+        board.forEachIndexed { x, it ->
+            it.forEachIndexed { y, k ->
+                if (k == CellStatus.White) {
+                    result.add(Cells.fromCell(x, y))
+                }
+            }
+        }
 
         return result
     }
 
     //Получение всех клеток, на которых находятся черные фишки
-    fun getBlack() : Set<Cells> {
+    fun getBlack(): Set<Cells> {
         val result = mutableSetOf<Cells>()
-        board.forEachIndexed { x,it -> it.forEachIndexed { y,k -> if (k == CellStatus.Black) {
-            result.add(Cells.fromCell(x,y))} } }
+        board.forEachIndexed { x, it ->
+            it.forEachIndexed { y, k ->
+                if (k == CellStatus.Black) {
+                    result.add(Cells.fromCell(x, y))
+                }
+            }
+        }
 
         return result
     }
@@ -58,8 +68,13 @@ class Board {
     //Получение всех клеток, на которых нет фишек (пустые клетки)
     fun getEmptyCells(): Set<Cells> {
         val result = mutableSetOf<Cells>()
-        board.forEachIndexed { x,it -> it.forEachIndexed { y,k -> if (k == CellStatus.Empty) {
-            result.add(Cells.fromCell(x,y))} } }
+        board.forEachIndexed { x, it ->
+            it.forEachIndexed { y, k ->
+                if (k == CellStatus.Empty) {
+                    result.add(Cells.fromCell(x, y))
+                }
+            }
+        }
 
         return result
     }
@@ -70,7 +85,7 @@ class Board {
     }
 
     //Обновление текущего статуса игры
-    private fun updateGameStatus(){
+    private fun updateGameStatus() {
         status = if (isWhiteTurn())
             GameStatus.BlackTurn
         else GameStatus.WhiteTurn
@@ -78,11 +93,11 @@ class Board {
 
     //Очистка доски - всем клеткам присваивается значение Empty
     private fun clear() {
-        board.forEachIndexed{ x, it -> it.forEachIndexed { y, _ ->  board[x][y] = CellStatus.Empty  } }
+        board.forEachIndexed { x, it -> it.forEachIndexed { y, _ -> board[x][y] = CellStatus.Empty } }
     }
 
     //Обновление доски для новой партии
-     fun reset(){
+    fun reset() {
         clear()
         status = GameStatus.BlackTurn
         setStartPosition()
@@ -91,7 +106,7 @@ class Board {
     //Функция для получения значения, кто сейчас ходит
     // Если true - ходит игрок с белыми фишками
     // Иначе - игрок с черными фишками
-    fun isWhiteTurn() : Boolean{
+    fun isWhiteTurn(): Boolean {
         return status != GameStatus.BlackTurn
     }
 
@@ -104,8 +119,8 @@ class Board {
             val nextX = startX + newX
             val nextY = startY + newY
 
-            if(nextX in 0..7 && nextY in 0..7) {
-                return Square(Cell(nextX,nextY), board[nextX][nextY])
+            if (nextX in 0..7 && nextY in 0..7) {
+                return Square(Cell(nextX, nextY), board[nextX][nextY])
             }
 
             return null
@@ -148,8 +163,8 @@ class Board {
         val flagGoRight = startY < endY
 
         return if (flagGoRight)
-            getPass(startX, startY, 8, 8, 0, 1, stopPos ) //движемся вправо
-        else getPass(startX, startY, 8, -1, 0, -1, stopPos )  //движемся влево
+            getPass(startX, startY, 8, 8, 0, 1, stopPos) //движемся вправо
+        else getPass(startX, startY, 8, -1, 0, -1, stopPos)  //движемся влево
 
     }
 
@@ -160,8 +175,8 @@ class Board {
         val flagGoDown = startX < endX
 
         return if (flagGoDown)
-            getPass(startX, startY, 8, 8, 1, 0, stopPos ) //движемся вниз
-        else getPass(startX, startY, -1, 8, -1, 0, stopPos )  //движемся вверх
+            getPass(startX, startY, 8, 8, 1, 0, stopPos) //движемся вниз
+        else getPass(startX, startY, -1, 8, -1, 0, stopPos)  //движемся вверх
 
     }
 
@@ -171,22 +186,30 @@ class Board {
         Берется значение для получения следующей клетки - newX и newY(прибавляем 1 или вычитаем или же не меняем)
         Устанавливается последняя клетка - stopPos(дальше нее не идем)
     */
-    private fun getPass(startX: Int, startY: Int, lastX: Int, lastY: Int, newX: Int, newY: Int, stopPos: Cell): List<Square> {
+    private fun getPass(
+        startX: Int,
+        startY: Int,
+        lastX: Int,
+        lastY: Int,
+        newX: Int,
+        newY: Int,
+        stopPos: Cell
+    ): List<Square> {
         val result = mutableListOf<Square>()
 
         var x = startX + newX
         var y = startY + newY
-        var cell = Cell(x,y)
+        var cell = Cell(x, y)
 
         while (x != lastX && y != lastY && cell != stopPos) {
             val squareStatus = board[x][y]
-            if(squareStatus == CellStatus.Empty)
+            if (squareStatus == CellStatus.Empty)
                 break
-            result.add(Square(cell,squareStatus))
+            result.add(Square(cell, squareStatus))
 
             x += newX
             y += newY
-            cell = Cell(x,y)
+            cell = Cell(x, y)
         }
 
         return result
@@ -197,24 +220,31 @@ class Board {
 
         return when {
             //движение вправо вверх
-            startX < endX && startY > endY -> getPass(startX, startY, 8, -1, 1, -1,stopPos)
+            startX < endX && startY > endY -> getPass(startX, startY, 8, -1, 1, -1, stopPos)
 
             //движение влево вниз
-            startX > endX && startY < endY -> getPass(startX, startY, -1, 8, -1, 1,stopPos)
+            startX > endX && startY < endY -> getPass(startX, startY, -1, 8, -1, 1, stopPos)
 
             //движение влево вверх
-            startX > endX && startY > endY -> getPass(startX, startY, -1, -1, -1, -1,stopPos)
+            startX > endX && startY > endY -> getPass(startX, startY, -1, -1, -1, -1, stopPos)
 
             //движение вправо вниз
-            else -> getPass(startX, startY, 8 , 8, 1, 1,stopPos)
+            else -> getPass(startX, startY, 8, 8, 1, 1, stopPos)
         }
 
     }
 
     //Нахождение последней клетки с определенным статусом в заданном ряду
-    private fun getLastSquare(startX: Int, startY: Int, secondX: Int, secondY: Int, currentStatus: CellStatus, stopPos: Cell ): Square? {
+    private fun getLastSquare(
+        startX: Int,
+        startY: Int,
+        secondX: Int,
+        secondY: Int,
+        currentStatus: CellStatus,
+        stopPos: Cell
+    ): Square? {
 
-        var route = getRoute(startX,startY,secondX,secondY,stopPos)
+        var route = getRoute(startX, startY, secondX, secondY, stopPos)
         var currentCell = route.first()
 
         //Поиск последней фишки с заданном ряду с таким же цветом
@@ -240,7 +270,7 @@ class Board {
     }
 
     //Получение списка клеток от start до end
-    private fun getRoute(startX: Int, startY: Int, endX: Int, endY: Int, stopPos: Cell ): List<Square> {
+    private fun getRoute(startX: Int, startY: Int, endX: Int, endY: Int, stopPos: Cell): List<Square> {
         return when {
 
             //получение столбца
@@ -250,7 +280,7 @@ class Board {
             startX == endX -> getRow(startX, startY, endY, stopPos)
 
             //получение идагонали
-            else -> getDiagonal(startX, startY,endX, endY, stopPos)
+            else -> getDiagonal(startX, startY, endX, endY, stopPos)
         }
     }
 
@@ -273,7 +303,7 @@ class Board {
 
 
                 //Получаем лист, соджержащий непустые клетки вокруг данной -> пропускаем
-                val list = getListOfAnyNonEmptyCellAround(i , j)
+                val list = getListOfAnyNonEmptyCellAround(i, j)
 
 
                 //Если все клетки вокруг данной пусты -> пропускаем
@@ -281,7 +311,7 @@ class Board {
                     continue
 
                 //Проверяем каждую клетку из списка, на наличие в ее ряду фишки такого же цвета чей сейчас ход
-                list.forEach{
+                list.forEach {
 
                     val currentStatus = if (isWhiteTurn)
                         CellStatus.White
@@ -309,7 +339,7 @@ class Board {
         return cell in listOfValidMoves
     }
 
-    fun move(cell : Cells): Boolean{
+    fun move(cell: Cells): Boolean {
 
         //Нельзя сделать ход в эту клетку
         if (!isValidMove(cell)) {
@@ -341,13 +371,13 @@ class Board {
     private fun updateBoard(cell: Cells) {
 
         //Получим статус, кто сейчас ходит
-        val currentStatus = if(isWhiteTurn())
+        val currentStatus = if (isWhiteTurn())
             CellStatus.White
         else CellStatus.Black
 
         //Получим список клеток, в направлении которых могут перевернуться фишки соперника
-        val listOfSquaresAround = getListOfAnyNonEmptyCellAround(cell.h, cell.v).
-            filter { it.cellStatus !=  currentStatus }
+        val listOfSquaresAround =
+            getListOfAnyNonEmptyCellAround(cell.h, cell.v).filter { it.cellStatus != currentStatus }
 
         //Заменяем фишки соперника на свои, если это возможно
         listOfSquaresAround.forEach { it ->
@@ -359,10 +389,16 @@ class Board {
             if (lastSquare != null) {
 
                 //Получаем список фишек, которые надо перевенуть
-                val route = getRoute(cell.h, cell.v, lastSquare.cell.h, lastSquare.cell.v, Cell(lastSquare.cell.h, lastSquare.cell.v))
+                val route = getRoute(
+                    cell.h,
+                    cell.v,
+                    lastSquare.cell.h,
+                    lastSquare.cell.v,
+                    Cell(lastSquare.cell.h, lastSquare.cell.v)
+                )
 
                 //Переворачиваем фишки
-                route.forEach {  k -> board[k.cell.h][k.cell.v] = currentStatus }
+                route.forEach { k -> board[k.cell.h][k.cell.v] = currentStatus }
                 board[cell.h][cell.v] = currentStatus
 
             }
@@ -372,7 +408,7 @@ class Board {
     }
 
     //Функция, которая создает копию доски и делает на ней move
-    fun makeCopyAndMove(cell : Cells): Board {
+    fun makeCopyAndMove(cell: Cells): Board {
 
         val newBoard = Board()
 

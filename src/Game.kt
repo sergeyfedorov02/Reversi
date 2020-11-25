@@ -1,4 +1,4 @@
-fun main(args : Array<String>) {
+fun main(args: Array<String>) {
     val board = Board()
     var gameStatus = board.getGameStatus()
 
@@ -10,7 +10,7 @@ fun main(args : Array<String>) {
         val whites = board.getWhite().size
         val blacks = board.getBlack().size
 
-        return when{
+        return when {
             whites > blacks -> Pair("Белыми", Pair(whites, blacks))
             blacks > whites -> Pair("Черными", Pair(whites, blacks))
             else -> Pair("Ничья", Pair(whites, blacks))
@@ -24,7 +24,7 @@ fun main(args : Array<String>) {
         if (gameStatus != GameStatus.GameOver) {
             println()
 
-            val status = if (gameStatus == GameStatus.WhiteTurn )
+            val status = if (gameStatus == GameStatus.WhiteTurn)
                 "Ход белых"
             else "Ход черных"
 
@@ -33,7 +33,7 @@ fun main(args : Array<String>) {
 
             val whoWin = whoWasWin()
             val whichTeamWin = whoWin.first
-            val points = Pair(whoWin.second.first,whoWin.second.second)
+            val points = Pair(whoWin.second.first, whoWin.second.second)
 
             println()
             println(" ".repeat(4) + "\u001B[31m!!!Игра закончилась!!!\u001B[0m")
@@ -41,7 +41,7 @@ fun main(args : Array<String>) {
             if (whichTeamWin != "Ничья") {
                 println("\u001B[31mПобедил игрок с $whichTeamWin фишками\u001B[0m")
             } else {
-                println(" ".repeat(8) + "\u001B[31mУстановилась $whichTeamWin\u001B[0m")
+                println(" ".repeat(6) + "\u001B[31mУстановилась $whichTeamWin\u001B[0m")
             }
 
             println()
@@ -52,7 +52,7 @@ fun main(args : Array<String>) {
         println()
 
         //Функция для отображения букв на доске
-        fun printLetters(){
+        fun printLetters() {
 
             val listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H")
             for (i in 0 until 8) {
@@ -76,7 +76,7 @@ fun main(args : Array<String>) {
             print("$number ")
 
             for (j in 0 until 8) {
-                when(Cells.fromCell(i, j)) {
+                when (Cells.fromCell(i, j)) {
                     in whites -> print("\u001B[34m Б  \u001B[0m")
                     in blacks -> print("\u001B[33m Ч  \u001B[0m")
                     else -> print(" -  ")
@@ -87,7 +87,7 @@ fun main(args : Array<String>) {
     }
 
     //Здесь выбираем тех, кто будет играть
-    fun getPlayer(isWhite: Boolean) : Player {
+    fun getPlayer(isWhite: Boolean): Player {
         if (isWhite) {
             return AdvancedBot()
         }
@@ -100,10 +100,10 @@ fun main(args : Array<String>) {
     showBoard()
 
     val whitePlayer = getPlayer(true)
-    val blackPlayer = getPlayer( false)
+    val blackPlayer = getPlayer(false)
 
     //Реализация самой игры
-    while(gameStatus != GameStatus.GameOver) {
+    while (gameStatus != GameStatus.GameOver) {
 
         println()
         print("Выберите клетку куда будете ходить: ")

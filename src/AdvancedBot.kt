@@ -27,7 +27,7 @@ class AdvancedBot : Player {
             //будем использовать класс с оценкой позиций
             val evaluatePos = EvaluatePosition()
 
-            listOfEvaluatePosition.add(Pair(cell, evaluatePos.evaluatePosition(board,cell)))
+            listOfEvaluatePosition.add(Pair(cell, evaluatePos.evaluatePosition(board, cell)))
 
             validMoves = validMoves.drop(1).toSet()
         }

@@ -95,9 +95,12 @@ class Board {
 
     //Очистка доски - всем клеткам присваивается значение Empty
     private fun clear() {
-        board.forEachIndexed { x, it -> it.forEachIndexed { y, _ -> board[x][y] =
-            CellStatus.Empty
-        } }
+        board.forEachIndexed { x, it ->
+            it.forEachIndexed { y, _ ->
+                board[x][y] =
+                    CellStatus.Empty
+            }
+        }
     }
 
     //Обновление доски для новой партии
@@ -324,7 +327,8 @@ class Board {
                     else CellStatus.Black
 
                     //Получение последней фишки в заданном ряду с таким же цветом, чей сейчас ход (после ряда фишек соперника)
-                    val lastSquare = getLastSquare(i, j, it.cell.h, it.cell.v, currentStatus,
+                    val lastSquare = getLastSquare(
+                        i, j, it.cell.h, it.cell.v, currentStatus,
                         Cell(9, 9)
                     )
 
@@ -391,7 +395,8 @@ class Board {
         listOfSquaresAround.forEach { it ->
 
             //Ищем первую фишку своего цвета после ряда фишек соперника
-            val lastSquare = getLastSquare(cell.h, cell.v, it.cell.h, it.cell.v, currentStatus,
+            val lastSquare = getLastSquare(
+                cell.h, cell.v, it.cell.h, it.cell.v, currentStatus,
                 Cell(9, 9)
             )
 

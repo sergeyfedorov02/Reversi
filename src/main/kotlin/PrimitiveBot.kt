@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.lang.IllegalStateException
 import java.util.concurrent.ThreadLocalRandom
 

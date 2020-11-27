@@ -1,6 +1,8 @@
-package tests
+package tests.kotlin
 
-import Board
+import main.kotlin.Board
+import main.kotlin.Cells
+import main.kotlin.GameStatus
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -31,7 +33,8 @@ internal class BoardTest {
     @Test
     fun sameTurnAfterMove() {
         val board = Board()
-        board.setPosition(setOf(Cells.G8, Cells.G7), setOf(Cells.F8), false)
+        board.setPosition(setOf(Cells.G8, Cells.G7), setOf(
+            Cells.F8), false)
         board.move(Cells.H8)
 
         assertEquals(GameStatus.BlackTurn, board.getGameStatus())

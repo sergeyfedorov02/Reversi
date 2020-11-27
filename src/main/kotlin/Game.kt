@@ -1,3 +1,5 @@
+package main.kotlin
+
 fun main(args: Array<String>) {
     val board = Board()
     var gameStatus = board.getGameStatus()

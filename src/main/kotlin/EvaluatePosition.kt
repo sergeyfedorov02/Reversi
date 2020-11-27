@@ -1,3 +1,5 @@
+package main.kotlin
+
 /*
 Цифры для оценки позиций и конечной формулы взяты с сайта: https://cutt.ly/XhpmrWl
  */

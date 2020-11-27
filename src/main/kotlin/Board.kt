@@ -1,3 +1,5 @@
+package main.kotlin
+
 class Board {
 
     private val board = Array(8) { Array(8) { CellStatus.Empty } }
@@ -93,7 +95,9 @@ class Board {
 
     //Очистка доски - всем клеткам присваивается значение Empty
     private fun clear() {
-        board.forEachIndexed { x, it -> it.forEachIndexed { y, _ -> board[x][y] = CellStatus.Empty } }
+        board.forEachIndexed { x, it -> it.forEachIndexed { y, _ -> board[x][y] =
+            CellStatus.Empty
+        } }
     }
 
     //Обновление доски для новой партии
@@ -120,7 +124,10 @@ class Board {
             val nextY = startY + newY
 
             if (nextX in 0..7 && nextY in 0..7) {
-                return Square(Cell(nextX, nextY), board[nextX][nextY])
+                return Square(
+                    Cell(nextX, nextY),
+                    board[nextX][nextY]
+                )
             }
 
             return null
@@ -142,7 +149,6 @@ class Board {
 
         //Получение клетки сверху слева
         getNeighboringSquare(x, y, -1, -1)?.let { result.add(it) }
-
 
         //Получение клетки сверху справа
         getNeighboringSquare(x, y, 1, -1)?.let { result.add(it) }
@@ -318,7 +324,9 @@ class Board {
                     else CellStatus.Black
 
                     //Получение последней фишки в заданном ряду с таким же цветом, чей сейчас ход (после ряда фишек соперника)
-                    val lastSquare = getLastSquare(i, j, it.cell.h, it.cell.v, currentStatus, Cell(9, 9))
+                    val lastSquare = getLastSquare(i, j, it.cell.h, it.cell.v, currentStatus,
+                        Cell(9, 9)
+                    )
 
                     val currentCell = Cells.fromCell(i, j)
                     //Если такая фишка присутствует и она еще не в result -> такой ход валидный
@@ -383,7 +391,9 @@ class Board {
         listOfSquaresAround.forEach { it ->
 
             //Ищем первую фишку своего цвета после ряда фишек соперника
-            val lastSquare = getLastSquare(cell.h, cell.v, it.cell.h, it.cell.v, currentStatus, Cell(9, 9))
+            val lastSquare = getLastSquare(cell.h, cell.v, it.cell.h, it.cell.v, currentStatus,
+                Cell(9, 9)
+            )
 
             //Если такая фишка есть -> переворачиваем фишки соперника
             if (lastSquare != null) {

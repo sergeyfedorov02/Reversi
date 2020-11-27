@@ -1,3 +1,5 @@
+package main.kotlin
+
 enum class Cells(val h: Int, val v: Int) {
     A1(0, 0), A2(1, 0), A3(2, 0), A4(3, 0),
     A5(4, 0), A6(5, 0), A7(6, 0), A8(7, 0),

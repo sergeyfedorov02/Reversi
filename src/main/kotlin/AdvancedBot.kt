@@ -26,10 +26,16 @@ class AdvancedBot : Player {
 
             val cell = validMoves.first()
 
+            //Делаем ход на копии доски
+            val newBoard = board.makeCopyAndMove(cell)
+
+            //если true -> я хожу за белых, иначе за черных
+            val whatColorIsMine = board.isWhiteTurn()
+
             //будем использовать класс с оценкой позиций
             val evaluatePos = EvaluatePosition()
 
-            listOfEvaluatePosition.add(Pair(cell, evaluatePos.evaluatePosition(board, cell)))
+            listOfEvaluatePosition.add(Pair(cell, evaluatePos.evaluatePosition(newBoard, whatColorIsMine)))
 
             validMoves = validMoves.drop(1).toSet()
         }

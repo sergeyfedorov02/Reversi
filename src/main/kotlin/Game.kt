@@ -69,6 +69,7 @@ fun main(args: Array<String>) {
         //Выводим текущее положение фишек на доске
         val whites = board.getWhite()
         val blacks = board.getBlack()
+        val validMoves = board.getValidMoves(board.isWhiteTurn())
 
         for (i in 0 until 8) {
             println()
@@ -81,6 +82,7 @@ fun main(args: Array<String>) {
                 when (Cells.fromCell(i, j)) {
                     in whites -> print("\u001B[34m Б  \u001B[0m")
                     in blacks -> print("\u001B[33m Ч  \u001B[0m")
+                    in validMoves -> print(" +  ")
                     else -> print(" -  ")
                 }
             }
@@ -91,9 +93,9 @@ fun main(args: Array<String>) {
     //Здесь выбираем тех, кто будет играть
     fun getPlayer(isWhite: Boolean): Player {
         if (isWhite) {
-            return AdvancedBot()
+            return SmartBot(4)
         }
-        return PrimitiveBot()
+        return SmartBot(6)
     }
 
     // Первоначальной расположение фигур

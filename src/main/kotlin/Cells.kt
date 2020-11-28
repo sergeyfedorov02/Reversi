@@ -26,6 +26,10 @@ enum class Cells(val h: Int, val v: Int) {
     H5(4, 7), H6(5, 7), H7(6, 7), H8(7, 7);
 
     companion object {
-        fun fromCell(h: Int, v: Int) = values().first { it.h == h && it.v == v }
+        private val allValues: Map<Pair<Int, Int>, Cells> = values()
+            .map { Pair(Pair(it.h, it.v), it) }
+            .toMap()
+
+        fun fromCell(h: Int, v: Int): Cells = allValues.getValue(Pair(h, v))
     }
 }

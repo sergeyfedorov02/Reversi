@@ -21,24 +21,19 @@ class EvaluatePosition {
     }
 
     //Функция оценки позиций
-    fun evaluatePosition(board: Board, cell: Cells): Double {
+    fun evaluatePosition(board: Board, whatColorIsMine: Boolean): Double {
 
-        //если true -> я хожу за белых, иначе за черных
-        val whatColorIsMine = board.isWhiteTurn()
-
-        val newBoard = board.makeCopyAndMove(cell) //Делаем ход на копии доски
-
-        val emptyCells = newBoard.getEmptyCells()
+        val emptyCells = board.getEmptyCells()
         val myCells: Set<Cells> //клетки с фишками нашего цвета
         val enemyCells: Set<Cells> //клетки с фишками соперника
 
         //В зависимости от того, кто сейчас ходит myCells и enemyCells присваиваются по разному
         if (whatColorIsMine) {
-            myCells = newBoard.getWhite()
-            enemyCells = newBoard.getBlack()
+            myCells = board.getWhite()
+            enemyCells = board.getBlack()
         } else {
-            myCells = newBoard.getBlack()
-            enemyCells = newBoard.getWhite()
+            myCells = board.getBlack()
+            enemyCells = board.getWhite()
         }
 
         //Введем параметры для конечной формулы
@@ -171,8 +166,8 @@ class EvaluatePosition {
         nearCornerCells = -12.5 * (myCellsSize - enemyCellsSize)
 
         //Мобильность игроков
-        myCellsSize = newBoard.getValidMoves(whatColorIsMine).size
-        enemyCellsSize = newBoard.getValidMoves(!whatColorIsMine).size
+        myCellsSize = board.getValidMoves(whatColorIsMine).size
+        enemyCellsSize = board.getValidMoves(!whatColorIsMine).size
         mobility = when {
             myCellsSize > enemyCellsSize -> (100.0 * myCellsSize) / (myCellsSize + enemyCellsSize)
             myCellsSize < enemyCellsSize -> -(100.0 * enemyCellsSize) / (myCellsSize + enemyCellsSize)

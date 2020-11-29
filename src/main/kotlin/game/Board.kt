@@ -1,4 +1,4 @@
-package main.kotlin
+package game
 
 class Board {
 

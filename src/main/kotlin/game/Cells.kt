@@ -1,4 +1,4 @@
-package main.kotlin
+package game
 
 enum class Cells(val h: Int, val v: Int) {
     A1(0, 0), A2(1, 0), A3(2, 0), A4(3, 0),

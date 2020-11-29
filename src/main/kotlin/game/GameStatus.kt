@@ -1,4 +1,4 @@
-package main.kotlin
+package game
 
 enum class GameStatus {
     WhiteTurn, //ход белых

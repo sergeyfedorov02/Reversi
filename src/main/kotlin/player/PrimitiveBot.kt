@@ -1,5 +1,7 @@
-package main.kotlin
+package player
 
+import game.Board
+import game.Cells
 import java.lang.IllegalStateException
 import java.util.concurrent.ThreadLocalRandom
 

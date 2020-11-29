@@ -1,4 +1,7 @@
-package main.kotlin
+package player
+
+import game.Board
+import game.Cells
 
 /**
  * Данный класс предназначен для реализации игры человека

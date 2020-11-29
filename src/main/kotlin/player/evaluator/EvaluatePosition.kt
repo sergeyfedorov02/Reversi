@@ -1,10 +1,13 @@
-package main.kotlin
+package player.evaluator
+
+import game.Board
+import game.Cells
 
 /*
 Цифры для оценки позиций и конечной формулы взяты с сайта: https://cutt.ly/XhpmrWl
  */
 
-class EvaluatePosition {
+class EvaluatePosition : Evaluator {
 
     private val evaluativeMap = Array(8) { IntArray(8) { 0 } }
 
@@ -21,7 +24,7 @@ class EvaluatePosition {
     }
 
     //Функция оценки позиций
-    fun evaluatePosition(board: Board, whatColorIsMine: Boolean): Double {
+    override fun evaluatePosition(board: Board, whatColorIsMine: Boolean): Double {
 
         val emptyCells = board.getEmptyCells()
         val myCells: Set<Cells> //клетки с фишками нашего цвета

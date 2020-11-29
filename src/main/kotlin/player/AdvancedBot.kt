@@ -1,5 +1,9 @@
-package main.kotlin
+package player
 
+import game.Board
+import game.Cells
+import player.evaluator.EvaluatePosition
+import player.evaluator.Evaluator
 import java.util.concurrent.ThreadLocalRandom
 
 /**
@@ -7,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom
  * Просчитывает все возможные ходы на данном этапе и выбирает наилучший
  */
 
-class AdvancedBot : Player {
+class AdvancedBot(private val evaluate: Evaluator) : Player {
     override fun selectMove(board: Board): Cells {
 
         var validMoves = board.getValidMoves(board.isWhiteTurn())
@@ -33,9 +37,7 @@ class AdvancedBot : Player {
             val whatColorIsMine = board.isWhiteTurn()
 
             //будем использовать класс с оценкой позиций
-            val evaluatePos = EvaluatePosition()
-
-            listOfEvaluatePosition.add(Pair(cell, evaluatePos.evaluatePosition(newBoard, whatColorIsMine)))
+            listOfEvaluatePosition.add(Pair(cell, evaluate.evaluatePosition(newBoard, whatColorIsMine)))
 
             validMoves = validMoves.drop(1).toSet()
         }

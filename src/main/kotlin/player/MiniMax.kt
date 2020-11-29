@@ -1,9 +1,15 @@
-package main.kotlin
+package player
 
-class MiniMax {
+import game.Board
+import game.Cells
+import game.GameStatus
+import player.evaluator.EvaluatePosition
+import player.evaluator.Evaluator
+
+class MiniMax(private val evaluate: Evaluator) {
 
     fun solve(board: Board, depth: Int, whatColorIsMine: Boolean): Cells {
-        var bestResult = Double.MIN_VALUE
+        var bestResult = -Double.MAX_VALUE  // Минимальное отрицательное значение типа double
 
         val validMoves = board.getValidMoves(whatColorIsMine)
 
@@ -11,8 +17,15 @@ class MiniMax {
 
         for (move in validMoves) {
 
+            //Запоминаем чей сейчас ход
+            val currentStatus = board.getGameStatus()
+
             //Делаем ход на копии доски
             val newBoard = board.makeCopyAndMove(move)
+
+            val gameStatus = newBoard.getGameStatus()
+
+            val newMax = currentStatus == gameStatus //наш ход продолжается -> делаем максимизацию
 
             //Рекурсивно ищем вес данного хода при помощи miniMaxAlphaBetta
             val childResult =
@@ -20,8 +33,8 @@ class MiniMax {
                     newBoard,
                     whatColorIsMine,
                     depth - 1,
-                    false,
-                    Double.MIN_VALUE,
+                    newMax,
+                    -Double.MAX_VALUE,
                     Double.MAX_VALUE
                 )
 
@@ -47,36 +60,37 @@ class MiniMax {
         var newAlpha = alpha
         var newBetta = betta
 
-        val evaluatePos = EvaluatePosition()
-
         //Если игра закончилась или же мы провели все рассчеты для заданной глубины
         if (depth == 0 || board.getGameStatus() == GameStatus.GameOver) {
-            return evaluatePos.evaluatePosition(board, whatColorIsMine)
+            return evaluate.evaluatePosition(board, whatColorIsMine)
         }
 
         val enemyColor = !whatColorIsMine
 
-        //Если нет валидных ходов -> теряем ход
-        if ((max && board.getValidMoves(whatColorIsMine).isEmpty() || (!max && board.getValidMoves(enemyColor).isEmpty()))) {
-            return miniMaxAlphaBetta(board, whatColorIsMine, depth - 1, !max, newAlpha, newBetta)
-        }
-
         var result: Double
 
         if (max) {
-            result = Double.MIN_VALUE
+            result = -Double.MAX_VALUE
 
             val listOfMyValidMoves = board.getValidMoves(whatColorIsMine)
 
             //Максимизация (для моего хода)
             for (move in listOfMyValidMoves) {
 
+                //Запоминаем чей сейчас ход
+                val currentStatus = board.getGameStatus()
+
                 //Делаем ход на копии доски
                 val newBoard = board.makeCopyAndMove(move)
 
+                val gameStatus = newBoard.getGameStatus()
+
+                //Проверяем, была ли передача хода
+                val newMax = currentStatus == gameStatus
+
                 //рекурсивно вызываем miniMaxAlphaBetta
                 val currentResult =
-                    miniMaxAlphaBetta(newBoard, whatColorIsMine, depth - 1, false, newAlpha, newBetta)
+                    miniMaxAlphaBetta(newBoard, whatColorIsMine, depth - 1, newMax, newAlpha, newBetta)
 
                 if (currentResult > result) {
                     result = currentResult
@@ -99,12 +113,20 @@ class MiniMax {
 
             for (move in listOfEnemyValidMoves) {
 
+                //Запоминаем чей сейчас ход
+                val currentStatus = board.getGameStatus()
+
                 //Делаем ход на копии доски
                 val newBoard = board.makeCopyAndMove(move)
 
+                val gameStatus = newBoard.getGameStatus()
+
+                //Проверяем, была ли передача хода
+                val newMin = currentStatus == gameStatus
+
                 //рекурсивно вызываем miniMaxAlphaBetta
                 val currentResult =
-                    miniMaxAlphaBetta(newBoard, whatColorIsMine, depth - 1, true, newAlpha, newBetta)
+                    miniMaxAlphaBetta(newBoard, whatColorIsMine, depth - 1, !newMin, newAlpha, newBetta)
 
                 if (currentResult < result) {
                     result = currentResult

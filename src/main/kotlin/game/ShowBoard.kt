@@ -1,13 +1,8 @@
-package main.kotlin
+package game
 
-fun main(args: Array<String>) {
-    val board = Board()
-    var gameStatus = board.getGameStatus()
+class ShowBoard() {
 
-    //счетчик ходов
-    var counter = 0
-
-    fun whoWasWin(): Pair<String, Pair<Int, Int>> {
+    private fun whoWasWin(board: Board): Pair<String, Pair<Int, Int>> {
 
         val whites = board.getWhite().size
         val blacks = board.getBlack().size
@@ -20,20 +15,20 @@ fun main(args: Array<String>) {
     }
 
     //Функция, которая рисует текущую доску + состояние игры
-    fun showBoard() {
+    fun printBoard(board: Board) {
 
         //Если игра еще не закончилась
-        if (gameStatus != GameStatus.GameOver) {
+        if (board.getGameStatus() != GameStatus.GameOver) {
             println()
 
-            val status = if (gameStatus == GameStatus.WhiteTurn)
+            val status = if (board.getGameStatus() == GameStatus.WhiteTurn)
                 "Ход белых"
             else "Ход черных"
 
             println(" ".repeat(3) + "\u001B[35mТекущий статус игры: $status\u001B[0m")
         } else {
 
-            val whoWin = whoWasWin()
+            val whoWin = whoWasWin(board)
             val whichTeamWin = whoWin.first
             val points = Pair(whoWin.second.first, whoWin.second.second)
 
@@ -90,51 +85,5 @@ fun main(args: Array<String>) {
         println()
     }
 
-    //Здесь выбираем тех, кто будет играть
-    fun getPlayer(isWhite: Boolean): Player {
-        if (isWhite) {
-            return SmartBot(4)
-        }
-        return SmartBot(6)
-    }
 
-    // Первоначальной расположение фигур
-    println()
-    println(" ".repeat(7) + "\u001B[31m!!!Игра началась!!!\u001B[0m")
-    showBoard()
-
-    val whitePlayer = getPlayer(true)
-    val blackPlayer = getPlayer(false)
-
-    //Реализация самой игры
-    while (gameStatus != GameStatus.GameOver) {
-
-        println()
-        print("Выберите клетку куда будете ходить: ")
-
-        val player = if (gameStatus == GameStatus.WhiteTurn)
-            whitePlayer
-        else blackPlayer
-
-        //Выбираем клетку для хода
-        val currentCell = player.selectMove(board)
-
-        //Совершаем ход
-        val currentMove = board.move(currentCell)
-
-        //Вбита клетка, куда нельзя походить , но валидные ходы присутствуют
-        if (!currentMove) {
-
-            println("Вы не можете походить в клетку \u001B[32m${currentCell}\u001B[0m, выберите другую")
-            continue
-        }
-
-        println("Выбран ход $currentCell")
-        gameStatus = board.getGameStatus()
-        showBoard()
-        counter++
-    }
-
-    println()
-    println("В партии было сделано $counter ходов")
 }

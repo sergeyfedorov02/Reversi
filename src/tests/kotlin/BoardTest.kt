@@ -1,13 +1,55 @@
 package tests.kotlin
 
-import main.kotlin.Board
-import main.kotlin.Cells
-import main.kotlin.GameStatus
+import game.Board
+import game.Cells
+import game.GameStatus
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import player.SmartBot
+import player.evaluator.EvaluatePosition
 
 internal class BoardTest {
+
+    @Test
+    fun smartBotTest() {
+        val board = Board()
+        board.setPosition(
+            setOf(
+                Cells.A2,
+                Cells.C1,
+                Cells.C2,
+                Cells.C4,
+                Cells.C5,
+                Cells.D2,
+                Cells.D4,
+                Cells.D5,
+                Cells.E1,
+                Cells.E2,
+                Cells.E5,
+                Cells.F2,
+                Cells.G3
+            ), setOf(
+                Cells.A3,
+                Cells.A6,
+                Cells.B3,
+                Cells.B4,
+                Cells.B5,
+                Cells.C3,
+                Cells.D3,
+                Cells.E3,
+                Cells.E4,
+                Cells.F3,
+                Cells.F4,
+                Cells.G4
+            ), true
+        )
+
+        val player = SmartBot(EvaluatePosition(),5)
+        val botMove = player.selectMove(board)
+
+        assertEquals(Cells.A4, botMove)
+    }
 
     @Test
     fun checkStartPosition() {

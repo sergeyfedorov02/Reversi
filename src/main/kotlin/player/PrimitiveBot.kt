@@ -24,4 +24,5 @@ class PrimitiveBot : Player {
         return validMoves.toList()[index]
     }
 
+    override fun name(): String = "primitive"
 }

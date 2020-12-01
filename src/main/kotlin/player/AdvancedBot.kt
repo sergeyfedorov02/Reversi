@@ -59,4 +59,5 @@ class AdvancedBot(private val evaluate: Evaluator) : Player {
 
     }
 
+    override fun name(): String = "advanced"
 }

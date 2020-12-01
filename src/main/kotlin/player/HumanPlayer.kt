@@ -20,4 +20,5 @@ class HumanPlayer : Player {
         return Cells.valueOf(yourCell.toUpperCase())
     }
 
+    override fun name(): String = "human"
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import player.SmartBot
 import player.evaluator.EvaluatePosition
+import player.evaluator.EvaluatorSettings
 
 internal class BoardTest {
 
@@ -45,7 +46,8 @@ internal class BoardTest {
             ), true
         )
 
-        val player = SmartBot(EvaluatePosition(),5)
+        val settings = EvaluatorSettings()
+        val player = SmartBot(EvaluatePosition(settings),5)
         val botMove = player.selectMove(board)
 
         assertEquals(Cells.A4, botMove)

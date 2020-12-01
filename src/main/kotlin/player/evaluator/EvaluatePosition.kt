@@ -7,20 +7,25 @@ import game.Cells
 Цифры для оценки позиций и конечной формулы взяты с сайта: https://cutt.ly/XhpmrWl
  */
 
-class EvaluatePosition : Evaluator {
+class EvaluatePosition(settings: EvaluatorSettings) : Evaluator {
 
-    private val evaluativeMap = Array(8) { IntArray(8) { 0 } }
+    private var evaluativeMap = Array(8) { IntArray(8) { 0 } }
+    private val a: Double
+    private val b: Double
+    private val c: Double
+    private val d: Double
+    private val e: Double
+    private val f: Double
+
 
     init {
-        //Проинициализируем матрицу
-        evaluativeMap[0] = intArrayOf(20, -3, 11, 8, 8, 11, -3, 20)
-        evaluativeMap[1] = intArrayOf(-3, -7, -4, 1, 1, -4, -7, -3)
-        evaluativeMap[2] = intArrayOf(11, -4, 2, 2, 2, 2, -4, 11)
-        evaluativeMap[3] = intArrayOf(8, 1, 2, -3, -3, 2, 1, 8)
-        evaluativeMap[4] = intArrayOf(8, 1, 2, -3, -3, 2, 1, 8)
-        evaluativeMap[5] = intArrayOf(11, -4, 2, 2, 2, 2, -4, 11)
-        evaluativeMap[6] = intArrayOf(-3, -7, -4, 1, 1, -4, -7, -3)
-        evaluativeMap[7] = intArrayOf(20, -3, 11, 8, 8, 11, -3, 20)
+        evaluativeMap = settings.evaluativeMap
+        a = settings.getA()
+        b = settings.getB()
+        c = settings.getC()
+        d = settings.getD()
+        e = settings.getE()
+        f = settings.getF()
     }
 
     //Функция оценки позиций
@@ -40,7 +45,10 @@ class EvaluatePosition : Evaluator {
         }
 
         //Введем параметры для конечной формулы
-        val whoHasMoreCells = (myCells.size - enemyCells.size).toDouble() // У кого сейчас больше фишек
+        var whoHasMorePoints = 0 // У кого сейчас больше очков
+        myCells.forEach { whoHasMorePoints += evaluativeMap[it.h][it.v] }
+        enemyCells.forEach { whoHasMorePoints -= evaluativeMap[it.h][it.v] }
+
         val cellsSizeParameter: Double // количество фишек
         val frontCells: Double // параметр для каревых фишек(с одной из сторон есть пустая клетка)
         val cornerCells: Double // параметр для угловых фишек
@@ -177,8 +185,8 @@ class EvaluatePosition : Evaluator {
             else -> 0.0
         }
 
-        return (10 * cellsSizeParameter) + (801.724 * cornerCells) + (382.026 * nearCornerCells) +
-                (78.922 * mobility) + (74.396 * frontCells) + (10 * whoHasMoreCells)
+        return (a * cellsSizeParameter) + (b * cornerCells) + (c * nearCornerCells) +
+                (d * mobility) + (e * frontCells) + (f * whoHasMorePoints)
 
     }
 }

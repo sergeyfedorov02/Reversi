@@ -14,6 +14,18 @@ class ShowBoard() {
         }
     }
 
+    fun getWinner(board: Board): String {
+
+        val blacks = board.getBlack().size
+        val whites = board.getWhite().size
+
+        return when {
+            whites > blacks -> "Win"
+            blacks > whites -> "Lose"
+            else -> "Draw"
+        }
+    }
+
     //Функция, которая рисует текущую доску + состояние игры
     fun printBoard(board: Board) {
 

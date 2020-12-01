@@ -20,4 +20,5 @@ class SmartBot(private val evaluate: Evaluator, private val depth: Int = 6) : Pl
         return miniMax.solve(board, depth, board.isWhiteTurn())
     }
 
+    override fun name(): String = "smart${depth}"
 }

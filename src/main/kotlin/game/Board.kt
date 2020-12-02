@@ -39,6 +39,10 @@ class Board {
         board[4][3] = CellStatus.Black
     }
 
+    fun getCellStatus(cell : Cells) : CellStatus {
+        return board[cell.h][cell.v]
+    }
+
     //Получение всех клеток, на которых находятся белые фишки
     fun getWhite(): Set<Cells> {
         val result = mutableSetOf<Cells>()

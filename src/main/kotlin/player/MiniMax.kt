@@ -47,6 +47,16 @@ class MiniMax(private val evaluate: Evaluator) {
         return bestMove
     }
 
+    private fun whoWin(board: Board, whatColorIsMine: Boolean, first: Int, second: Int): Double {
+
+        return when {
+            first > second -> Double.MAX_VALUE
+            first < second -> -Double.MAX_VALUE
+            else -> evaluate.evaluatePosition(board, whatColorIsMine)
+        }
+
+    }
+
     private fun miniMaxAlphaBetta(
         board: Board,
         whatColorIsMine: Boolean,
@@ -67,18 +77,11 @@ class MiniMax(private val evaluate: Evaluator) {
             val black = board.getBlack().size
 
             return if (whatColorIsMine) {
-                when {
-                    white > black -> Double.MAX_VALUE
-                    black > white -> -Double.MAX_VALUE
-                    else -> evaluate.evaluatePosition(board, whatColorIsMine)
-                }
+                whoWin(board, whatColorIsMine, white, black)
             } else {
-                when {
-                    white > black -> -Double.MAX_VALUE
-                    black > white -> Double.MAX_VALUE
-                    else -> evaluate.evaluatePosition(board, whatColorIsMine)
-                }
+                whoWin(board, whatColorIsMine, black, white)
             }
+
         }
 
         //все рассчеты для заданной глубины проведены -> возвращаем вес позиции

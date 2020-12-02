@@ -3,7 +3,6 @@ package player
 import game.Board
 import game.Cells
 import game.GameStatus
-import player.evaluator.EvaluatePosition
 import player.evaluator.Evaluator
 
 class MiniMax(private val evaluate: Evaluator) {
@@ -60,8 +59,30 @@ class MiniMax(private val evaluate: Evaluator) {
         var newAlpha = alpha
         var newBetta = betta
 
-        //Если игра закончилась или же мы провели все рассчеты для заданной глубины
-        if (depth == 0 || board.getGameStatus() == GameStatus.GameOver) {
+        //Если игра закончилась, то найдем вес парти
+        // если мы проиграли -> минимальный вес
+        // если выиграли -> максимальный вес
+        if (board.getGameStatus() == GameStatus.GameOver) {
+            val white = board.getWhite().size
+            val black = board.getBlack().size
+
+            return if (whatColorIsMine) {
+                when {
+                    white > black -> Double.MAX_VALUE
+                    black > white -> -Double.MAX_VALUE
+                    else -> evaluate.evaluatePosition(board, whatColorIsMine)
+                }
+            } else {
+                when {
+                    white > black -> -Double.MAX_VALUE
+                    black > white -> Double.MAX_VALUE
+                    else -> evaluate.evaluatePosition(board, whatColorIsMine)
+                }
+            }
+        }
+
+        //все рассчеты для заданной глубины проведены -> возвращаем вес позиции
+        if (depth == 0) {
             return evaluate.evaluatePosition(board, whatColorIsMine)
         }
 

@@ -117,7 +117,7 @@ class EvaluatePosition(settings: EvaluatorSettings) : Evaluator {
             Cells.H8 in enemyCells -> enemyCellsSize++
         }
 
-        cornerCells = 25 * (myCellsSize - enemyCellsSize).toDouble()
+        cornerCells = 25.0 * (myCellsSize - enemyCellsSize)
 
         //Размещение фишек в близких к углам клетках
         myCellsSize = 0

@@ -2,7 +2,6 @@ package player
 
 import game.Board
 import game.Cells
-import player.evaluator.EvaluatePosition
 import player.evaluator.Evaluator
 import java.util.concurrent.ThreadLocalRandom
 

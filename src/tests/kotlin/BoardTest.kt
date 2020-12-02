@@ -3,6 +3,7 @@ package tests.kotlin
 import game.Board
 import game.Cells
 import game.GameStatus
+import game.main
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -11,6 +12,114 @@ import player.evaluator.EvaluatePosition
 import player.evaluator.EvaluatorSettings
 
 internal class BoardTest {
+
+    //Тест для заполнения статистики
+    /*@Test
+    fun mainTest() {
+        val smartBot2 = "smart2"
+        val smartBot3 = "smart3"
+        val smartBot4 = "smart4"
+        val smartBot5 = "smart5"
+        val smartBot6 = "smart6"
+        val primitiveBot = "primitive"
+        val advancedBot = "advanced"
+
+        val listOfPlayers = listOf(smartBot2, smartBot3, smartBot4, smartBot5, smartBot6, primitiveBot, advancedBot)
+        var whitePlayer: String
+        var blackPlayer: String
+
+        for (i in 1..17) {
+            when (i) {
+                1 -> {
+                    whitePlayer = listOfPlayers[0]
+                    blackPlayer = listOfPlayers[1]
+                }
+
+                2 -> {
+                    whitePlayer = listOfPlayers[1]
+                    blackPlayer = listOfPlayers[0]
+                }
+
+                3 -> {
+                    whitePlayer = listOfPlayers[1]
+                    blackPlayer = listOfPlayers[2]
+                }
+
+                4 -> {
+                    whitePlayer = listOfPlayers[2]
+                    blackPlayer = listOfPlayers[1]
+                }
+
+                5 -> {
+                    whitePlayer = listOfPlayers[3]
+                    blackPlayer = listOfPlayers[2]
+                }
+
+                6 -> {
+                    whitePlayer = listOfPlayers[2]
+                    blackPlayer = listOfPlayers[3]
+                }
+
+                7 -> {
+                    whitePlayer = listOfPlayers[1]
+                    blackPlayer = listOfPlayers[5]
+                }
+
+                8 -> {
+                    whitePlayer = listOfPlayers[5]
+                    blackPlayer = listOfPlayers[1]
+                }
+
+                9 -> {
+                    whitePlayer = listOfPlayers[6]
+                    blackPlayer = listOfPlayers[1]
+                }
+
+                10 -> {
+                    whitePlayer = listOfPlayers[1]
+                    blackPlayer = listOfPlayers[6]
+                }
+
+                11 -> {
+                    whitePlayer = listOfPlayers[6]
+                    blackPlayer = listOfPlayers[5]
+                }
+
+                12 -> {
+                    whitePlayer = listOfPlayers[5]
+                    blackPlayer = listOfPlayers[6]
+                }
+
+                13 -> {
+                    whitePlayer = listOfPlayers[5]
+                    blackPlayer = listOfPlayers[5]
+                }
+
+                14 -> {
+                    whitePlayer = listOfPlayers[6]
+                    blackPlayer = listOfPlayers[6]
+                }
+
+                15 -> {
+                    whitePlayer = listOfPlayers[3]
+                    blackPlayer = listOfPlayers[4]
+                }
+
+                16 -> {
+                    whitePlayer = listOfPlayers[4]
+                    blackPlayer = listOfPlayers[3]
+                }
+
+                else -> {
+                    whitePlayer = listOfPlayers[2]
+                    blackPlayer = listOfPlayers[2]
+                }
+            }
+            for (j in 1..1) {
+                main(arrayOf(whitePlayer, blackPlayer))
+            }
+        }
+    }*/
 
     @Test
     fun smartBotTest() {
@@ -47,7 +156,7 @@ internal class BoardTest {
         )
 
         val settings = EvaluatorSettings()
-        val player = SmartBot(EvaluatePosition(settings),5)
+        val player = SmartBot(EvaluatePosition(settings), 5)
         val botMove = player.selectMove(board)
 
         assertEquals(Cells.A4, botMove)
